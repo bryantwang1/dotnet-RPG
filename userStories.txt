@@ -1,0 +1,19 @@
+As a user, I want to be able to create an account, so that I can track my progress.
+
+As a user, I want to be able to edit my account information.
+
+As a user, I want to be able to delete my account.
+
+As a user, I want to be able to set, change, or delete an image for my avatar.
+
+As a user, I want to be able to explore locations where I interact with items and enemies.
+
+As a user, I want to be able to interact with an inventory, so that I can keep track of my items.
+
+As an admin, I want to be able to add, edit, and delete locations so that I can alter the user experience.
+
+As an admin, I want to be able to add, edit, and delete items, so that I can alter the user experience.
+
+As an admin, I want to be able to add, edit, and delete enemies, so that I can alter the user experience.
+
+As a user, I want to be able to fight enemies with damage and hit points to get items.
