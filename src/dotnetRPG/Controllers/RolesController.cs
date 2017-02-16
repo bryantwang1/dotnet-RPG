@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using dotnetRPG.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,23 +25,63 @@ namespace dotnetRPG.Controllers
             _signInManager = signInManager;
             _db = db;
         }
+
+        public IActionResult Index()
+        {
+            var roles = _db.Roles.ToList();
+            return View(roles);
+        }
+
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(FormCollection collection)
+        public IActionResult CreatePost()
         {
+            string roleName = HttpContext.Request.Form["roleName"];
+
             try
             {
-                _db.Roles.Add(new Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole()
+                _db.Roles.Add(new IdentityRole()
                 {
-                    Name = collection["RoleName"]
+                    Name = roleName
                 });
                 _db.SaveChanges();
                 ViewBag.ResultMessage = "Role created successfully!";
-                return RedirectToAction("Index", "Account");
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public IActionResult Delete(string roleName)
+        {
+            var thisRole = _db.Roles.Where(r => r.Name.Equals(roleName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+            _db.Roles.Remove(thisRole);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(string roleName)
+        {
+            var thisRole = _db.Roles.Where(r => r.Name.Equals(roleName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+            return View(thisRole);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(IdentityRole role)
+        {
+            try
+            {
+                _db.Entry(role).State = EntityState.Modified;
+                _db.SaveChanges();
+
+                return RedirectToAction("Index");
             }
             catch
             {
